@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
-const mysql = require("mysql2/promise")
+const mysql = require("mysql2/promise");
+require("dotenv").config();
 
 // crear el servidor web
 const server = express();
@@ -8,8 +9,8 @@ const server = express();
 async function getDBConnection() {
   const connection = await mysql.createConnection({
     host: "localhost",
-    user: "root",
-    password: "admin",
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
     database: "productos"
   })
   connection.connect();
@@ -123,7 +124,7 @@ server.delete("/user/:idUser", async (req, res) => {
 })
 
 
-const port = 5000;
+const port = process.env.PORT;
 server.listen(port, () => {
   console.log("Server is running on port " + port);
 });
