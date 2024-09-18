@@ -41,7 +41,6 @@ server.post("/user", async (req, res) => {
 
 
 //leer registros
-
 server.get("/user", async (req, res) => {
   const connection = await getDBConnection();
   const params = req.query;
@@ -62,19 +61,21 @@ server.get("/user", async (req, res) => {
 
 
 //Actualizar datos del registro
-
-server.patch("/user", async (req, res) => {
+server.put("/user/:idUser", async (req, res) => {
+  const id = req.params.idUser; // url params
   const connection = await getDBConnection();
-  const params = req.body;
+  const newData = req.body
   const userQuerySQL =
-    "UPDATE users SET email = ?, password = ? WHERE idUser = ?";
+  "UPDATE users SET  user = ?, name = ?, email = ?, password = ? WHERE  idUser = ?";
   const [userResult] = await connection.query(userQuerySQL, [
-    params.email,
-    params.password,
-    params.idUser
+    newData.user,
+    newData.name,
+    newData.email,
+    newData.password,
+    newData.idUser
   ]);
   connection.end();
-  
+
   res.status(201).json({
     status: "success",
     result: userResult,
@@ -82,10 +83,8 @@ server.patch("/user", async (req, res) => {
 })
 
 //eliminar un registro
-
-
 server.delete("/user/:idUser", async (req, res) => {
-  const params = req.params.idUser;
+  const idUser = req.params.idUser;
   const connection = await getDBConnection();
   const sql = "DELETE from users WHERE idUser = ?";
   const [userResult] = await connection.query(sql, [params]
