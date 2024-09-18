@@ -61,6 +61,27 @@ server.get("/user", async (req, res) => {
 })
 
 
+//Actualizar datos del registro
+
+server.patch("/user", async (req, res) => {
+  const connection = await getDBConnection();
+  const params = req.body;
+  const userQuerySQL =
+    "UPDATE users SET email = ?, password = ? WHERE idUser = ?";
+  const [userResult] = await connection.query(userQuerySQL, [
+    params.email,
+    params.password,
+    params.idUser
+  ]);
+  connection.end();
+  console.log(userResult)
+  res.status(201).json({
+    status: "success",
+    result: userResult,
+  });
+})
+
+
 const port = 5000;
 server.listen(port, () => {
   console.log("Server is running on port " + port);
