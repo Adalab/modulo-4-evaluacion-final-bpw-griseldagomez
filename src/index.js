@@ -40,7 +40,7 @@ server.post("/user", async (req, res) => {
 })
 
 
-//leer los registros
+//leer registros
 
 server.get("/user", async (req, res) => {
   const connection = await getDBConnection();
@@ -74,7 +74,24 @@ server.patch("/user", async (req, res) => {
     params.idUser
   ]);
   connection.end();
-  console.log(userResult)
+  
+  res.status(201).json({
+    status: "success",
+    result: userResult,
+  });
+})
+
+//eliminar un registro
+
+
+server.delete("/user/:idUser", async (req, res) => {
+  const params = req.params.idUser;
+  const connection = await getDBConnection();
+  const sql = "DELETE from users WHERE idUser = ?";
+  const [userResult] = await connection.query(sql, [params]
+  );
+  connection.end();
+ 
   res.status(201).json({
     status: "success",
     result: userResult,
